@@ -3,6 +3,9 @@ module WillTranslate
     
     attr_accessor :localised_fields
     
+    private 
+    
+    # Loads translations for this object. Called automatically by +after_initialize+ hook.
     def load_translations
             
       unless @translations
@@ -23,6 +26,7 @@ module WillTranslate
       @translations            
     end
     
+    # Saves translations for this object. Called automatically by +after_save+ hook.
     def save_translations    
 
       @translations.each do |locale,fields|
@@ -38,6 +42,31 @@ module WillTranslate
       
     end
     
+    # Returns the translated content for the specified field. By default this returns the translation for the current
+    # locale, but this can be overridden using the +options+ parameter.
+    #
+    # === Parameters
+    #
+    # [field]   the field for which return localised content
+    # [options] see below _(optional)_
+    #
+    # === Options
+    #
+    # [:fallback] whether or not to fall back to another locale, as defined by +I18n.fallbacks+ configuration 
+    #             _(default:false)_
+    # [:locale]   the locale to return. This must be one defined in +I18n.available_locales+ _(defaults to current locale)_
+    #
+    # Note that either option can be specified on its own, rather than as a member of a hash, thus:
+    #
+    #   # return the title in the current locale
+    #   model.title
+    #
+    #   # as above, but fall back to other available locale if there is no localisation for
+    #   # the current locale
+    #   model.title true
+    #
+    #   # return the French title
+    #   model.title :fr
     def get_translated_content( field, options = nil )
       load_translations unless defined? @translations
       
@@ -73,6 +102,14 @@ module WillTranslate
       content
     end
     
+    # Sets localised content for the specified field. Content may either be specified as a string, in which case it is
+    # set for the current locale; or as a hash of locale => localisation pairs, in which case content is set for all
+    # specified locales.
+    #
+    # === Parameters
+    #
+    # [field]       the field to set content for
+    # [new_content] the new content, either as a String or Hash
     def set_translated_content( field, new_content )
       
       load_translations unless defined? @translations

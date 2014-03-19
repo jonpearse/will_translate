@@ -1,6 +1,12 @@
 module WillTranslate
   module ClassMethods
     
+    # Adds localisable fields to an ActiveRecord object. This will automatically create getters and setters for these
+    # fields.
+    #
+    # === Parameters
+    #
+    # [fields]  an array containing field names (as strings or symbols) that you wish to be localised.
     def will_translate( *fields )
       include InstanceMethods
       

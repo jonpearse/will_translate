@@ -1,0 +1,100 @@
+h1. will_translate
+
+@will_translate@ is a another wee gem I threw together to scratch an itch. It provides a nice, easy way of transparently localising your ActiveRecord fields.
+
+h2. Installation
+
+Is fairly simple.
+
+*1. add @will_translate@ to your Gemfile*
+
+<pre>gem "will_translate", :git => "git://github.com/jonpearse/will_translate.git"</pre>
+
+*2. add a database migration*
+
+Add the following to a suitable migration:
+
+<pre><code lang="ruby">add_will_translate</code></pre>
+    
+*3. add translations to your model*
+
+
+<pre><code lang="ruby">class MyModel < ActiveRecord::Base
+    …
+    # add translateable fields
+    will_translate :field_one, :field_two, :field_three
+    …
+end</code></pre>
+
+*4. use*
+
+<pre><code lang="ruby">
+# set title for default locale
+t = Test.new :title => "Hello world"
+
+# retrieve title for default locale
+t.title
+# => "Hello world" 
+
+# retrieve English title
+t.title :en
+# => "Hello world"
+
+# set French title…
+t.title = { :fr => "Hello world in French" }
+
+# … and retrieve it
+t.title :fr
+# => "Hello world in French" 
+
+# delete title for default locale…
+t.title = nil
+# => nil 
+
+# … and try retrieving it
+t.title
+# => nil 
+
+# retrieve it with locale fallback
+t.title true    
+# => "Hello world in French"
+</code></pre>
+
+h2. Configuration
+
+@will_translate@ ties into "Rails’ Internationalisation API":http://guides.rubyonrails.org/i18n.html, so anyone familiar with that shouldn’t have any problems working with @will_translate@.
+
+For those looking at for a tl;dr, however:
+
+*Setting your default locale*
+
+<pre><code language="ruby">config.i18n.default_locale = :en</code></pre>
+
+*Setting available locales*
+
+<pre><code language="ruby">config.i18n.available_locales = [ :en, :fr, :es, :hu … ]</code></pre>
+
+*Setting fallback rules*
+
+<pre><code language="ruby"># English should fall back to French, and vice-versa
+config.i18n.fallbacks = { :en => :fr, :fr => :en }</code></pre>
+
+h2. Hasn’t this already been done?
+
+Yup! A quick google search turns up all manner of different options, however none of them _quite_ matched what I was trying to do… plus, I fancied a bit of a challenge.
+
+h2. To-do
+
+Right now, ActiveModel’s validation methods kinda work, but only for your current locale… which is better than no validation at all, but it’d be kinda nice to make it work properly.
+
+Other than that, there’re probably bits and pieces I can improve all over the place =)
+
+h2. Version history
+  
+h3. 0.0.1 (2014-03-19)
+
+Initial release.
+
+…
+
+Share and enjoy!

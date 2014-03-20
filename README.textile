@@ -28,41 +28,45 @@ end</code></pre>
 
 *4. use*
 
-<pre><code lang="ruby">
-# set title for default locale
+<pre><code language="ruby">
+I18n.locale => :en
 t = Test.new :title => "Hello world"
 
-# retrieve title for default locale
 t.title
 # => "Hello world" 
 
-# retrieve English title
-t.title :en
-# => "Hello world"
+I18n.locale = :fr
+t.title = "Hello world in French"
 
-# set French title…
-t.title = { :fr => "Hello world in French" }
-
-# … and retrieve it
-t.title :fr
-# => "Hello world in French" 
-
-# delete title for default locale…
-t.title = nil
-# => nil 
-
-# … and try retrieving it
 t.title
-# => nil 
-
-# retrieve it with locale fallback
-t.title true    
 # => "Hello world in French"
+
+# setting multiple locales at once
+t.title = { :en => "Hello world in English", :fr => "Hello world in French" }
+
+# retrieving specific locale
+t.title :locale => :en
+# => "Hello world in English"
+</code></pre>
+
+Fallback example:
+
+<pre><code language="ruby">
+I18n.locale => :en
+t.title = { :en => nil, :fr => "French title" }
+
+# get translation for default locale
+t.title
+# => nil
+
+# get translation, with fallback
+t.title :fallback => true
+# => "French title"
 </code></pre>
 
 h2. Configuration
 
-@will_translate@ ties into "Rails’ Internationalisation API":http://guides.rubyonrails.org/i18n.html, so anyone familiar with that shouldn’t have any problems working with @will_translate@.
+@will_translate@ ties into "Rails’ Internationalisation API":http://guides.rubyonrails.org/i18n.html, so anyone familiar with that shouldn’t have any problems.
 
 For those looking at for a tl;dr, however:
 
@@ -91,6 +95,10 @@ Other than that, there’re probably bits and pieces I can improve all over the 
 
 h2. Version history
   
+h3. 0.0.2 (2014-03-20) 
+
+Forcing getter parameters to be a hash, rather than having kooky fallbacks (thanks to Rick for the suggestion)
+ 
 h3. 0.0.1 (2014-03-19)
 
 Initial release.

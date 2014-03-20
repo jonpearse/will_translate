@@ -21,7 +21,7 @@ module WillTranslate
       fields.each do |field|
         
         # getter
-        define_method "#{field}" do |args = nil|          
+        define_method "#{field}" do |args = {}|          
           get_translated_content field.to_sym, args
         end
         
@@ -30,7 +30,7 @@ module WillTranslate
         end
         
         # setter
-        define_method "#{field}=" do |args = nil|
+        define_method "#{field}=" do |args = {}|
           set_translated_content field.to_sym, args
         end
                 

@@ -56,39 +56,15 @@ module WillTranslate
     #             _(default:false)_
     # [:locale]   the locale to return. This must be one defined in +I18n.available_locales+ _(defaults to current locale)_
     #
-    # Note that either option can be specified on its own, rather than as a member of a hash, thus:
-    #
-    #   # return the title in the current locale
-    #   model.title
-    #
-    #   # as above, but fall back to other available locale if there is no localisation for
-    #   # the current locale
-    #   model.title true
-    #
-    #   # return the French title
-    #   model.title :fr
-    def get_translated_content( field, options = nil )
+    def get_translated_content( field, options = {} )
       load_translations unless defined? @translations
       
-      real_options = {}    
-      
-      # switch
-      if options.is_a? String
-        real_options[:locale] = options.to_sym
-      elsif options.is_a? Symbol
-        real_options[:locale] = options
-      elsif [TrueClass,FalseClass].include?(options.class)
-        real_options[:fallback] = options
-      elsif options.is_a? Hash
-        real_options = options
-      end
-      
-      # fill in
-      real_options[:fallback] ||= false
-      real_options[:locale]   ||= I18n.locale
-      
+      # default
+      options[:locale]    ||= I18n.locale
+      options[:fallback]  ||= false
+    
       # fallbacks?
-      locales = real_options[:fallback] && I18n.respond_to?(:fallbacks) ? I18n.fallbacks[real_options[:locale]] : [real_options[:locale]]
+      locales = options[:fallback] && I18n.respond_to?(:fallbacks) ? I18n.fallbacks[options[:locale]] : [options[:locale]]
       
       # orf we go
       content = nil
